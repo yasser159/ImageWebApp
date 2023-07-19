@@ -1,0 +1,29 @@
+name: image_web_app
+description: A new Flutter project.
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ">=3.0.1 <4.0.0"
+
+dependencies:
+  cloud_firestore: ^4.8.2
+  fast_cached_network_image: ^1.2.0
+  file_picker: ^5.3.2
+  firebase_core: ^2.14.0
+  firebase_storage: ^11.2.4
+  flutter:
+    sdk: flutter
+  flutter_hsvcolor_picker: ^1.2.3
+  flutter_screenutil: ^5.8.4
+  image_size_getter: ^2.1.2
+  provider: ^6.0.5
+  rxdart: ^0.27.7
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
