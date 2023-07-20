@@ -20,15 +20,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-        // MaterialApp(
-        //   home:
-        MultiProvider(
+    return MaterialApp(
+        home: MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ImageWebProvider()),
       ],
       child: const ImageWebWidget(),
-    );
-    //);
+    ));
   }
 }

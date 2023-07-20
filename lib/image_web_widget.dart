@@ -167,10 +167,10 @@ class _ImageWebWidgetState extends State<ImageWebWidget> {
                               : height * 0.75,
                       child: DrawingBoard(
                         controller: _drawingController,
-                        panAxis: PanAxis.free,
+                        panAxis: PanAxis.aligned,
                         background: Image.memory(
                           pickedImage,
-                          fit: BoxFit.contain,
+                          fit: BoxFit.cover,
                           scale: (memoryImageSize.width > 12000) ? 4 : 2,
                         ),
                         showDefaultActions: true,
@@ -208,6 +208,7 @@ class _ImageWebWidgetState extends State<ImageWebWidget> {
                           child: Center(
                             child: Text(
                               widget.dialogButtonText ?? "Save",
+                              textDirection: TextDirection.ltr,
                               style: widget.dialogbuttonTextStyle ??
                                   const TextStyle(
                                     fontWeight: FontWeight.w600,
@@ -277,128 +278,138 @@ class _ImageWebWidgetState extends State<ImageWebWidget> {
     double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Consumer<ImageWebProvider>(
-            builder: (context, provider, child) => SizedBox(
-              height: height * 0.3,
-              child: (!provider.isLoading && provider.uploadedImages.isNotEmpty)
-                  ? Stack(
-                      children: [
-                        ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: provider.uploadedImages.length,
-                          controller: _scrollController,
-                          physics: const BouncingScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Card(
-                                shape: const RoundedRectangleBorder(),
-                                elevation: 8,
-                                clipBehavior: Clip.none,
-                                borderOnForeground: false,
-                                child: FastCachedImage(
-                                  url: provider.uploadedImages[index],
-                                  // loadingBuilder: (p0, p1) => const Center(
-                                  //   child: CircularProgressIndicator(
-                                  //     color: Colors.black,
-                                  //   ),
-                                  // ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          top: 0,
-                          bottom: 0,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Material(
-                                elevation: 10,
-                                child: IconButton(
-                                  icon: const Icon(
-                                      Icons.arrow_back_ios_new_rounded),
-                                  onPressed: _isLeftArrowDisabled
-                                      ? null
-                                      : _scrollToPrevious,
-                                ),
-                              ),
-                              Material(
-                                elevation: 10,
-                                child: IconButton(
-                                  icon: const Icon(
-                                      Icons.arrow_forward_ios_rounded),
-                                  onPressed: _isRightArrowDisabled
-                                      ? null
-                                      : _scrollToNext,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-                  : Center(
-                      child: (provider.isLoading)
-                          ? CircularProgressIndicator(
-                              color: widget.circularProgressIndicatorColor ??
-                                  Colors.orange.shade500)
-                          : Material(
-                              type: MaterialType.transparency,
-                              child: widget.noUploadedImagesWidget ??
-                                  Text(
-                                    "Upload Images to display here",
-                                    style:
-                                        widget.noUploadedImagestextTextStyle ??
-                                            const TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                            ),
+    return Container(
+      width: width,
+      height: height,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Consumer<ImageWebProvider>(
+              builder: (context, provider, child) => SizedBox(
+                height: height * 0.3,
+                child: (!provider.isLoading && provider.uploadedImages.isNotEmpty)
+                    ? Stack(
+                        children: [
+                          ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: provider.uploadedImages.length,
+                            controller: _scrollController,
+                            physics: const BouncingScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Card(
+                                  shape: const RoundedRectangleBorder(),
+                                  elevation: 8,
+                                  clipBehavior: Clip.none,
+                                  borderOnForeground: false,
+                                  child: FastCachedImage(
+                                    url: provider.uploadedImages[index],
+                                    // loadingBuilder: (p0, p1) => const Center(
+                                    //   child: CircularProgressIndicator(
+                                    //     color: Colors.black,
+                                    //   ),
+                                    // ),
                                   ),
+                                ),
+                              );
+                            },
+                          ),
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            top: 0,
+                            bottom: 0,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Material(
+                                  elevation: 10,
+                                  child: IconButton(
+                                    icon: const Icon(
+                                        Icons.arrow_back_ios_new_rounded),
+                                    onPressed: _isLeftArrowDisabled
+                                        ? null
+                                        : _scrollToPrevious,
+                                  ),
+                                ),
+                                Material(
+                                  elevation: 10,
+                                  child: IconButton(
+                                    icon: const Icon(
+                                        Icons.arrow_forward_ios_rounded),
+                                    onPressed: _isRightArrowDisabled
+                                        ? null
+                                        : _scrollToNext,
+                                  ),
+                                ),
+                              ],
                             ),
+                          ),
+                        ],
+                      )
+                    : Center(
+                        child: (provider.isLoading)
+                            ? CircularProgressIndicator(
+                                color: widget.circularProgressIndicatorColor ??
+                                    Colors.orange.shade500)
+                            : Material(
+                                type: MaterialType.transparency,
+                                child: widget.noUploadedImagesWidget ??
+                                    Text(
+                                      "Upload Images to display here",
+                                      textDirection: TextDirection.ltr,
+                                      style:
+                                          widget.noUploadedImagestextTextStyle ??
+                                              const TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.black,
+                                                fontSize: 16,
+                                              ),
+                                    ),
+                              ),
+                      ),
+              ),
+            ),
+            SizedBox(height: widget.buttonAndListSpacing ?? 120),
+            Directionality(textDirection: TextDirection.ltr,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(
+                      widget.buttonColor ?? Colors.orange.shade500),
+                  shape: MaterialStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          widget.buttonBorderRadius ?? 10),
                     ),
-            ),
-          ),
-          SizedBox(height: widget.buttonAndListSpacing ?? 120),
-          ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(
-                  widget.buttonColor ?? Colors.orange.shade500),
-              shape: MaterialStatePropertyAll(
-                RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(widget.buttonBorderRadius ?? 10),
+                  ),
+                  elevation: const MaterialStatePropertyAll(10),
+                  shadowColor: MaterialStatePropertyAll(Colors.grey.shade500),
+
                 ),
-              ),
-              elevation: const MaterialStatePropertyAll(10),
-              shadowColor: MaterialStatePropertyAll(Colors.grey.shade500),
-            ),
-            onPressed: () {
-              _pickImageFromDevice();
-            },
-            child: SizedBox(
-              height: widget.buttonHeight ?? height * 0.07,
-              width: widget.buttonWidth ?? width * 0.25,
-              child: Center(
-                child: Text(
-                  widget.buttonText ?? "Upload Image",
-                  style: widget.buttonTextStyle ??
-                      const TextStyle(
-                          fontWeight: FontWeight.w700, fontSize: 18),
+                onPressed: () {
+                  _pickImageFromDevice();
+                },
+                child: SizedBox(
+                  height: widget.buttonHeight ?? height * 0.07,
+                  width: widget.buttonWidth ?? width * 0.25,
+                  child: Center(
+                    child: Text(
+                      widget.buttonText ?? "Upload Image",
+                      textDirection: TextDirection.ltr,
+                      style: widget.buttonTextStyle ??
+                          const TextStyle(
+                              fontWeight: FontWeight.w700, fontSize: 18),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
